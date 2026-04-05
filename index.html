@@ -1573,11 +1573,7 @@ function closeNav() {
 
 
 <script>
-document.getElementById("form-contacto").addEventListener("submit", function() {
-  if (typeof fbq !== 'undefined') {
-    fbq('track', 'Lead');
-  }
-});
+
 </script>
 
 
@@ -1599,6 +1595,10 @@ const db = getFirestore(app);
 
 document.getElementById("form-contacto").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead');
+  }
 
   const nombre = document.getElementById("nombre").value;
   const contacto = document.getElementById("cdato").value;
