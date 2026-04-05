@@ -1890,6 +1890,7 @@ document.getElementById("form-contacto").addEventListener("submit", async (e) =>
     await addDoc(collection(db, "leads"), {
       nombre,
       contacto,
+      presupuesto,
       mensaje,
       fecha: new Date()
     });
