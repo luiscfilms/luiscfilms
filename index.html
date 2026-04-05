@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<meta name="facebook-domain-verification" content="36vbynk49nnxaplhn5xcm4bz2bpuuf" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luiscfilms — Filmmaker & Estrategia Visual</title>
@@ -13,7 +14,9 @@
     --black: #0A0A0A; --dark: #111111; --surface: #1A1A1A;
     --text: #F0EBE0; --text-muted: #888880; --text-dim: #555550;
   }
-  html { scroll-behavior: smooth; }
+  /* scroll-behavior: smooth removido — causaba que al recargar la página
+     el browser restaurara la posición con animación, apareciendo a mitad de página */
+  html { scroll-behavior: auto; overflow-x: hidden; }
   body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
 
   /* NAV */
@@ -45,17 +48,151 @@ transition: all 0.4s ease;
   filter: brightness(1.1);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  /* Nav bar */
+  nav {
+    padding: 0.9rem 1.5rem;
+    align-items: center;
+    transition: transform 0.35s ease, background 0.4s;
+    z-index: 500 !important;
+    position: fixed;
+  }
+  nav.nav-hidden {
+    transform: translateY(-100%);
+  }
   .nav-logo img {
-  transition: transform 0.4s ease, opacity 0.4s ease;
-
     height: 22px;
+  }
+
+  /* Panel desplegable — cuadro compacto desde esquina superior derecha */
+  .nav-links {
+    display: none !important;
+    flex-direction: column !important;
+    position: fixed !important;
+    top: 56px !important;
+    right: 1rem !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 220px !important;
+    background: rgba(14,14,14,0.97) !important;
+    border: 0.5px solid rgba(201,168,76,0.25) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    z-index: 400 !important;
+    padding: 0.5rem 0 !important;
+    overflow: visible !important;
+    list-style: none !important;
+    border-radius: 4px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08) !important;
+    gap: 0 !important;
+    /* Animación de entrada */
+    transform-origin: top right !important;
+    animation: none !important;
+  }
+  .nav-links.open {
+    display: flex !important;
+    animation: menuIn 0.48s cubic-bezier(0.34,1.18,0.64,1) forwards !important;
+  }
+  .nav-links.closing {
+    animation: menuOut 0.32s cubic-bezier(0.4,0,0.2,1) forwards !important;
+  }
+  @keyframes menuIn {
+    0%   { opacity: 0; transform: scale(0.82) translateY(-12px); filter: blur(6px); }
+    60%  { opacity: 1; filter: blur(0px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+  }
+  @keyframes menuOut {
+    0%   { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+    100% { opacity: 0; transform: scale(0.86) translateY(-10px); filter: blur(4px); }
+  }
+  /* Ítems con entrada escalonada estilo Apple */
+  .nav-links.open li {
+    opacity: 0;
+    animation: itemIn 0.38s cubic-bezier(0.34,1.2,0.64,1) forwards;
+  }
+  .nav-links.open li:nth-child(1) { animation-delay: 0.08s; }
+  .nav-links.open li:nth-child(2) { animation-delay: 0.13s; }
+  .nav-links.open li:nth-child(3) { animation-delay: 0.18s; }
+  .nav-links.open li:nth-child(4) { animation-delay: 0.23s; }
+  .nav-links.open li:nth-child(5) { animation-delay: 0.28s; }
+  @keyframes itemIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .nav-links li {
+    width: 100% !important;
+  }
+  .nav-links a {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.2em !important;
+    color: var(--text-muted) !important;
+    display: block !important;
+    padding: 0.95rem 1.4rem !important;
+    width: 100% !important;
+    text-align: left !important;
+    border-bottom: 0.5px solid rgba(201,168,76,0.07) !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    transition: color 0.2s, background 0.2s !important;
+  }
+  .nav-links li:last-child a {
+    border-bottom: none !important;
+  }
+  .nav-links a:active,
+  .nav-links a:hover {
+    color: var(--gold) !important;
+    background: rgba(201,168,76,0.05) !important;
+  }
+
+  /* Hamburger */
+  .nav-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 600 !important;
+    background: none;
+    border: none;
+    padding: 4px;
+    position: relative;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--text-muted);
+    transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+    transform-origin: center;
+  }
+  .nav-hamburger.open span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+    background: var(--gold);
+  }
+  .nav-hamburger.open span:nth-child(2) {
+    opacity: 0; transform: scaleX(0);
+  }
+  .nav-hamburger.open span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+    background: var(--gold);
+  }
+
+  /* Blur al contenido de fondo cuando el menú está abierto */
+  body.nav-open > *:not(nav):not(#wa-pill) {
+    filter: blur(3px);
+    transition: filter 0.3s ease;
+  }
+  body > *:not(nav):not(#wa-pill) {
+    transition: filter 0.3s ease;
   }
 }
 
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.3s; }
-  .nav-links a:hover { color: var(--gold); }
+  /* Desktop nav links — solo aplica en pantallas grandes */
+  @media (min-width: 769px) {
+    .nav-links { display: flex !important; gap: 2.5rem; list-style: none; flex-direction: row; position: static; background: none; backdrop-filter: none; padding: 0; overflow: visible; width: auto; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.3s; padding: 0; border: none; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-hamburger { display: none !important; }
+  }
 
   /* HERO */
   #hero {
@@ -88,8 +225,26 @@ transition: all 0.4s ease;
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+  /* MOBILE HERO FIXES */
+  @media (max-width: 600px) {
+    /* Fix 2: move vertical gold line to far right so it doesn't cross the title */
+    .hero-line {
+      left: auto;
+      right: 1rem;
+      opacity: 0.4;
+    }
+    /* Fix 3: move scroll indicator below the CTA, not overlapping subtitle */
+    .hero-scroll {
+      bottom: 1.5rem;
+      right: 1rem;
+    }
+    #hero {
+      padding: 0 1.5rem 5rem;
+    }
+  }
+
   /* SECTIONS */
-  section { padding: 8rem 4rem; }
+  section { padding: 8rem 4rem; max-width: 100%; position: relative; }
   .section-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
   .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; margin-bottom: 3rem; }
   .section-title em { font-style: italic; color: var(--gold); }
@@ -108,9 +263,85 @@ transition: all 0.4s ease;
   /* PORTAFOLIO */
   #portafolio { background: var(--black); }
   .portfolio-intro { font-size: 0.95rem; color: var(--text-muted); max-width: 500px; line-height: 1.7; margin-bottom: 4rem; }
-  .portfolio-layout { display: flex; flex-direction: column; gap: 1.5rem; }
-  .portfolio-row-vertical { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .portfolio-layout { display: flex; flex-direction: column; gap: 2.5rem; }
+  .portfolio-row-vertical { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; align-items: start; }
   .portfolio-row-horizontal { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* VIDEO WRAPPER WITH SIDE DESCRIPTION */
+  .video-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* APPLE MOTION DESCRIPTION */
+  .video-desc {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.55s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+    padding: 0.85rem 0.2rem 0.3rem;
+    pointer-events: none;
+  }
+  .video-wrapper:hover .video-desc,
+  .video-wrapper.playing .video-desc {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .video-desc-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .video-desc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.25;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .video-desc-body {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    display: block;
+  }
+
+  /* HORIZONTAL VIDEO DESC */
+  .video-wrapper-h {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .video-desc-h {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.55s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+    padding: 1rem 0.5rem 0.3rem;
+    pointer-events: none;
+  }
+  .video-wrapper-h:hover .video-desc-h,
+  .video-wrapper-h.playing .video-desc-h {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .video-desc-h .video-desc-label {
+    font-size: 0.6rem;
+  }
+  .video-desc-h .video-desc-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+  .video-desc-h .video-desc-body {
+    font-size: 0.8rem;
+    max-width: 480px;
+  }
 
   .video-card { position: relative; background: var(--surface); border: 0.5px solid rgba(201,168,76,0.12); overflow: hidden; transition: border-color 0.4s; }
   .video-card:hover { border-color: rgba(201,168,76,0.4); }
@@ -120,7 +351,9 @@ transition: all 0.4s ease;
 
   .video-thumb { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.4s; }
   .video-thumb.gone { opacity: 0; pointer-events: none; }
-  .thumb-bg { position: absolute; inset: 0; background-size: cover; background-position: center 30%; filter: brightness(0.35); }
+  .thumb-bg { position: absolute; inset: 0; background-size: cover; background-position: center 30%; filter: brightness(0.62); transition: filter 0.55s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .video-thumb:hover .thumb-bg,
+  .video-card.lit .thumb-bg { filter: brightness(0.88); }
   .thumb-play { position: relative; width: 52px; height: 52px; border-radius: 50%; border: 0.5px solid rgba(201,168,76,0.7); background: rgba(10,10,10,0.5); display: flex; align-items: center; justify-content: center; transition: transform 0.3s, background 0.3s; }
   .video-thumb:hover .thumb-play { transform: scale(1.1); background: rgba(201,168,76,0.15); }
   .thumb-triangle { width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 16px; border-color: transparent transparent transparent var(--gold); margin-left: 4px; }
@@ -190,7 +423,7 @@ transition: all 0.4s ease;
     .resultados-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 900px) {
-    nav { padding: 1rem 2rem; } .nav-links { gap: 1.2rem; }
+    nav { padding: 1rem 2rem; }
     section { padding: 5rem 2rem; }
     #sobre { grid-template-columns: 1fr; gap: 3rem; }
     .portfolio-row-vertical { grid-template-columns: repeat(2, 1fr); }
@@ -199,10 +432,19 @@ transition: all 0.4s ease;
     #contacto { grid-template-columns: 1fr; gap: 3rem; }
     #hero { padding: 0 2rem 4rem; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .video-desc, .video-desc-h { opacity: 1; transform: translateY(0); }
+  }
+  /* Hide desktop nav links on mobile and show hamburger */
+  @media (max-width: 768px) {
+    .nav-links:not(.open) { display: none !important; }
+    #contacto { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+    .contact-info { order: 1; }
+    .contact-form { order: 2; }
   }
   @media (max-width: 600px) {
     .portfolio-row-vertical { grid-template-columns: 1fr 1fr; }
     .resultados-grid { grid-template-columns: 1fr 1fr; }
+    .video-desc, .video-desc-h { opacity: 1; transform: translateY(0); }
   }
 
 /* MOCKUP IPHONE */
@@ -254,13 +496,39 @@ transition: all 0.4s ease;
   transform: translateY(0);
 }
 
-/* CINEMATIC HOVER */
+/* CINEMATIC GLOW HOVER */
 .video-card {
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94),
+              box-shadow 0.55s cubic-bezier(0.25,0.46,0.45,0.94),
+              border-color 0.55s ease;
 }
-.video-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+.video-card:hover,
+.video-card.lit {
+  transform: scale(1.025) translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.35),
+    0 8px 30px rgba(0,0,0,0.7),
+    0 0 50px rgba(201,168,76,0.12),
+    0 0 100px rgba(201,168,76,0.06);
+  border-color: rgba(201,168,76,0.45) !important;
+}
+/* Glow ring que aparece debajo del card */
+.video-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: 0 0 0 0 rgba(201,168,76,0);
+  transition: box-shadow 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+  pointer-events: none;
+  z-index: 0;
+}
+.video-card:hover::after,
+.video-card.lit::after {
+  box-shadow:
+    0 0 35px 8px rgba(201,168,76,0.18),
+    0 0 70px 20px rgba(201,168,76,0.07);
 }
 
 
@@ -272,7 +540,7 @@ transition: all 0.4s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 8888;
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
   color: #C9A84C;
@@ -327,6 +595,146 @@ section {
   margin-bottom: 4rem;
 }
 
+/* =============================================
+   APPLE MOTION — MOBILE SMOOTH SCROLL & 3D
+   Solo afecta móvil, no cambia nada en desktop
+   ============================================= */
+
+/* Spring easing estilo Apple para reveal en mobile */
+@media (max-width: 900px) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+    transition:
+      opacity 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.75s cubic-bezier(0.34, 1.12, 0.64, 1);
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Scene sections: entrada suave con spring Apple */
+  .scene {
+    opacity: 0;
+    transform: translateY(40px) scale(0.985);
+    transition:
+      opacity 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.85s cubic-bezier(0.34, 1.08, 0.64, 1);
+  }
+  .scene.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Video cards: entrada escalonada suave al hacer scroll */
+  .video-wrapper,
+  .resultado-card,
+  .service-card {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    transition:
+      opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.65s cubic-bezier(0.34, 1.1, 0.64, 1),
+      box-shadow 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.4s ease;
+  }
+  .video-wrapper.in-view,
+  .resultado-card.in-view,
+  .service-card.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Touch glow en cards: suave como Apple */
+  .video-card.lit {
+    transform: scale(1.018) translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.3),
+      0 6px 24px rgba(0,0,0,0.65),
+      0 0 40px rgba(201,168,76,0.1);
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.18, 0.64, 1),
+      box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* About image: entrada desde abajo con spring */
+  .about-img-wrapper {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    transition:
+      opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s,
+      transform 0.7s cubic-bezier(0.34, 1.1, 0.64, 1) 0.1s;
+  }
+  .about-img-wrapper.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Stat numbers: entrada escalonada */
+  .about-stats > div {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.55s cubic-bezier(0.34, 1.15, 0.64, 1);
+  }
+  .about-stats.in-view > div:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  .about-stats.in-view > div:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  .about-stats.in-view > div:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+
+  /* 3D Touch tilt suave en cards (reemplaza el mousemove de desktop) */
+  .video-card,
+  .resultado-card {
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.12, 0.64, 1),
+      box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.4s ease;
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+
+  /* Hero: parallax suave solo en mobile */
+  #hero {
+    transition: background-position 0.1s linear;
+  }
+
+  /* Gold divider: entrada animada */
+  .gold-divider {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s,
+      transform 0.6s cubic-bezier(0.34, 1.2, 0.64, 1) 0.2s;
+  }
+  .gold-divider.in-view {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  /* Section labels y titles: fade-slide suave */
+  .section-label {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.5s cubic-bezier(0.34, 1.1, 0.64, 1);
+  }
+  .section-label.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gyroscope parallax — solo en dispositivos con sensor */
+@media (max-width: 900px) {
+  .gyro-tilt {
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -338,13 +746,16 @@ section {
   <a href="#hero" class="nav-logo">
     <img src="https://i.imgur.com/6DjvQ0q.png" alt="Luiscfilms">
   </a>
-  <ul class="nav-links">
-    <li><a href="#sobre">Sobre mí</a></li>
-    <li><a href="#portafolio">Portafolio</a></li>
-    <li><a href="#resultados">Resultados</a></li>
-    <li><a href="#servicios">Servicios</a></li>
-    <li><a href="#contacto">Contacto</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#sobre"      onclick="closeNav()">Sobre mí</a></li>
+    <li><a href="#portafolio" onclick="closeNav()">Portafolio</a></li>
+    <li><a href="#resultados" onclick="closeNav()">Resultados</a></li>
+    <li><a href="#servicios"  onclick="closeNav()">Servicios</a></li>
+    <li><a href="#contacto"   onclick="closeNav()">Contacto</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menú" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO — usa tu foto como fondo cinematográfico -->
@@ -354,7 +765,7 @@ section {
   <p class="hero-label">Filmmaker · Estrategia Visual</p>
   <h1 class="hero-title">La imagen<br>que <em>mueve</em><br>negocios.</h1>
   <p class="hero-sub">Creo videos con intención. No solo filmo — diseño la narrativa que conecta tu marca con la persona correcta.</p>
-  <a href="#portafolio" class="hero-cta">Ver portafolio</a>
+  <a href="#portafolio" class="hero-cta" onclick="fbq('track', 'InitiateCheckout');">Trabaja conmigo →</a>
   <span class="hero-scroll">Scroll para descubrir</span>
 </section>
 
@@ -395,66 +806,193 @@ section {
 
   <div class="portfolio-layout">
 
-    <!-- 5 VERTICALES -->
+    <!-- 9 VERTICALES -->
     <div class="portfolio-row-vertical">
 
-      <div class="video-card video-card-vertical">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/79jTnbjFSOU?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/79jTnbjFSOU/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
+      <!-- 1. Revolution Arg -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/79jTnbjFSOU?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/79jTnbjFSOU/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">BTS · Antes & Después</span>
+            <span class="video-title">Revolution Arg</span>
+          </div>
         </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">BTS · Antes & Después</span>
-          <span class="video-title">Revolution Arg</span>
-        </div>
-      </div>
-
-      <div class="video-card video-card-vertical">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/_rqaySEgu0Q?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/_rqaySEgu0Q/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
-        </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">BTS · Cinematic</span>
-          <span class="video-title">Camaro</span>
+        <div class="video-desc">
+          <span class="video-desc-label">Trading · Cripto</span>
+          <span class="video-desc-title">Revolution Arg</span>
+          <span class="video-desc-body">Antes y después para empresa de educación en trading de criptomonedas y activos financieros.</span>
         </div>
       </div>
 
-      <div class="video-card video-card-vertical">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/sXyi6K6C7T4?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/sXyi6K6C7T4/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
+      <!-- 2. Camaro -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/_rqaySEgu0Q?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/_rqaySEgu0Q/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">BTS · Cinematic</span>
+            <span class="video-title">Camaro · Olarte Group</span>
+            <div class='nicho-badge'>Autos</div>
+          </div>
         </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">BTS · Cinematic</span>
-          <span class="video-title">McLaren</span>
-        </div>
-      </div>
-
-      <div class="video-card video-card-vertical">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/Iz4Q3oQnl2E?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/Iz4Q3oQnl2E/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
-        </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">Estrategia · Color</span>
-          <span class="video-title">El poder del color</span>
+        <div class="video-desc">
+          <span class="video-desc-label">Dealer USA · Autos</span>
+          <span class="video-desc-title">Camaro</span>
+          <span class="video-desc-body">Transformación visual para Olarte Group, dealer estadounidense. El antes y después del Camaro hablan solos.</span>
         </div>
       </div>
 
-      <div class="video-card video-card-vertical">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/j74aLKOSt6I?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/j74aLKOSt6I/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
+      <!-- 3. McLaren -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/sXyi6K6C7T4?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/sXyi6K6C7T4/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">BTS · Cinematic</span>
+            <span class="video-title">McLaren · Medina's</span>
+            <div class='nicho-badge'>Autos</div>
+          </div>
         </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">Marca · EE.UU</span>
-          <span class="video-title">Taco Fiesta</span>
+        <div class="video-desc">
+          <span class="video-desc-label">Auto Detailing · POV</span>
+          <span class="video-desc-title">McLaren</span>
+          <span class="video-desc-body">POV estilo Apple Vision que transiciona al McLaren. Producido para Medina's Auto Detailing.</span>
+        </div>
+      </div>
+
+      <!-- 4. Colorización Pro -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/Iz4Q3oQnl2E?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/Iz4Q3oQnl2E/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Estrategia · Color</span>
+            <span class="video-title">El poder del color</span>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">Color · Autos Pro</span>
+          <span class="video-desc-title">Colorización</span>
+          <span class="video-desc-body">Cinematografía y colorización de nivel profesional. Estructura de movimientos pensada para autos de alta gama.</span>
+        </div>
+      </div>
+
+      <!-- 5. Taco Fiesta -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/j74aLKOSt6I?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/j74aLKOSt6I/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Marca · EE.UU</span>
+            <span class="video-title">Taco Fiesta</span>
+            <div class='nicho-badge'>Negocio</div>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">Restaurante · México & EE.UU</span>
+          <span class="video-desc-title">Taco Fiesta</span>
+          <span class="video-desc-body">Contenido de marca para restaurante con presencia en México y Estados Unidos. Sabor que se ve.</span>
+        </div>
+      </div>
+
+      <!-- 6. VFX Tatuaje -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/tZphZpjGp70?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/tZphZpjGp70/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">VFX · Creativo</span>
+            <span class="video-title">Revelación de tatuaje</span>
+            <div class='nicho-badge'>VFX</div>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">VFX · Reveal</span>
+          <span class="video-desc-title">Tattoo Reveal</span>
+          <span class="video-desc-body">Efecto visual de revelación de tatuaje. VFX aplicado al nicho del tattoo para generar impacto inmediato.</span>
+        </div>
+      </div>
+
+      <!-- 7. El Contre -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/nKP2vTarmG0?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/nKP2vTarmG0/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Cliente · Tatuaje</span>
+            <span class="video-title">El Contre</span>
+            <div class='nicho-badge'>Cliente</div>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">Tattoo Artist · USA</span>
+          <span class="video-desc-title">El Contre</span>
+          <span class="video-desc-body">Contenido para tatuador radicado en EE.UU. Visual pensado para posicionar su arte y atraer nuevos clientes.</span>
+        </div>
+      </div>
+
+      <!-- 8. LIT Auto Group -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/EDP3-gf8xY4?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/EDP3-gf8xY4/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Cliente · Autos</span>
+            <span class="video-title">LIT Auto Group</span>
+            <div class='nicho-badge'>Autos</div>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">Dealer · USA</span>
+          <span class="video-desc-title">LIT Auto Group</span>
+          <span class="video-desc-body">Producción para dealer de autos en Estados Unidos. Contenido que convierte atención en visitas al showroom.</span>
+        </div>
+      </div>
+
+      <!-- 9. Palmahia -->
+      <div class="video-wrapper">
+        <div class="video-card video-card-vertical">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/2_1_JH1_aZQ?autoplay=1&rel=0'); this.closest('.video-wrapper').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/2_1_JH1_aZQ/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Cliente · Real Estate</span>
+            <span class="video-title">Palmahia</span>
+            <div class='nicho-badge'>Real Estate</div>
+          </div>
+        </div>
+        <div class="video-desc">
+          <span class="video-desc-label">Colombia · Acacias, Meta</span>
+          <span class="video-desc-title">Palmahia</span>
+          <span class="video-desc-body">Video para proyecto inmobiliario en Acacias, Meta. Narrativa visual que conecta con el comprador local.</span>
         </div>
       </div>
 
@@ -463,27 +1001,43 @@ section {
     <!-- 2 HORIZONTALES -->
     <div class="portfolio-row-horizontal">
 
-      <div class="video-card video-card-horizontal">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/3pNzvKNCBqI?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/3pNzvKNCBqI/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
+      <!-- 10. Sophie & Natalie -->
+      <div class="video-wrapper-h">
+        <div class="video-card video-card-horizontal">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/3pNzvKNCBqI?autoplay=1&rel=0'); this.closest('.video-wrapper-h').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/3pNzvKNCBqI/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Sweet XV · Cinematic</span>
+            <span class="video-title">Sophie & Natalie</span>
+          </div>
         </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">Sweet XV · Cinematic</span>
-          <span class="video-title">Sophie & Natalie</span>
+        <div class="video-desc-h">
+          <span class="video-desc-label">Sweet XV · Película</span>
+          <span class="video-desc-title">Sophie & Natalie</span>
+          <span class="video-desc-body">Quinceañero filmado como película de Disney. Cada escena construida para que la familia lo vea como una obra cinematográfica.</span>
         </div>
       </div>
 
-      <div class="video-card video-card-horizontal">
-        <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/dDeToU8WDn8?autoplay=1&rel=0')">
-          <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/dDeToU8WDn8/hqdefault.jpg')"></div>
-          <div class="thumb-play"><div class="thumb-triangle"></div></div>
+      <!-- 11. Sam & Gigi -->
+      <div class="video-wrapper-h">
+        <div class="video-card video-card-horizontal">
+          <div class="video-thumb" onclick="playVideo(this,'https://www.youtube.com/embed/dDeToU8WDn8?autoplay=1&rel=0'); this.closest('.video-wrapper-h').classList.add('playing')">
+            <div class="thumb-bg" style="background-image:url('https://img.youtube.com/vi/dDeToU8WDn8/hqdefault.jpg')"></div>
+            <div class="thumb-play"><div class="thumb-triangle"></div></div>
+          </div>
+          <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+          <div class="video-info">
+            <span class="video-tag">Boda · Cinematic</span>
+            <span class="video-title">Sam & Gigi</span>
+          </div>
         </div>
-        <iframe src="" allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
-        <div class="video-info">
-          <span class="video-tag">Boda · Cinematic</span>
-          <span class="video-title">Sam & Gigi</span>
+        <div class="video-desc-h">
+          <span class="video-desc-label">Boda · Utah, EE.UU</span>
+          <span class="video-desc-title">S & G · Lejardin</span>
+          <span class="video-desc-body">Boda cinematográfica en Lejardin, Utah. Luz natural, momentos reales y un edit que emociona desde el primer frame.</span>
         </div>
       </div>
 
@@ -558,6 +1112,25 @@ section {
   </div>
 </section>
 
+
+<!-- RESULTADO ESPERADO -->
+<section class="reveal" id="resultado-esperado" style="background:#0A0A0A;">
+  <p class="section-label">Enfoque</p>
+  <h2 class="section-title">Resultado <em>esperado.</em></h2>
+  <div class="gold-divider"></div>
+
+  <div style="max-width:700px; color:#888880; line-height:1.8; font-size:0.95rem;">
+    <p>Este enfoque no se trata solo de crear contenido visual, sino de generar impacto real en tu negocio.</p>
+    <ul style="margin-top:1.5rem; padding-left:1rem;">
+      <li>• Mayor percepción profesional</li>
+      <li>• Más confianza en clientes</li>
+      <li>• Mejor presentación de servicios</li>
+      <li>• Diferenciación frente a competencia</li>
+    </ul>
+  </div>
+</section>
+
+
 <!-- SERVICIOS -->
 <section class="reveal" id="servicios">
   <p class="section-label">Servicios</p>
@@ -567,22 +1140,43 @@ section {
       <div class="service-number">01</div>
       <h3 class="service-name">Producción de Video</h3>
       <p class="service-desc">Desde la idea hasta el render final. Comerciales, videos de marca, bodas y eventos. Calidad cinematográfica para negocios que quieren diferenciarse.</p>
-      <a href="#contacto" class="service-cta">Solicitar cotización →</a>
+      <a href="#contacto" class="service-cta" onclick="fbq('track', 'InitiateCheckout');">Solicitar cotización →</a>
     </div>
     <div class="service-card">
       <div class="service-number">02</div>
       <h3 class="service-name">Estrategia Visual</h3>
       <p class="service-desc">Antes de grabar, definimos qué queremos lograr. Estructuro el mensaje, el formato y la intención de cada video para que convierta y conecte.</p>
-      <a href="#contacto" class="service-cta">Solicitar cotización →</a>
+      <a href="#contacto" class="service-cta" onclick="fbq('track', 'InitiateCheckout');">Solicitar cotización →</a>
     </div>
     <div class="service-card">
       <div class="service-number">03</div>
       <h3 class="service-name">Plan de Contenido</h3>
       <p class="service-desc">Diseño un sistema de contenido audiovisual para tu negocio: qué publicar, cuándo, en qué formato y con qué objetivo. Sin improvisar.</p>
-      <a href="#contacto" class="service-cta">Solicitar cotización →</a>
+      <a href="#contacto" class="service-cta" onclick="fbq('track', 'InitiateCheckout');">Solicitar cotización →</a>
     </div>
   </div>
 </section>
+
+
+<!-- CONVERSION BLOCK -->
+<section class="reveal" style="background:#111;">
+  <p class="section-label">Enfoque estratégico</p>
+  <h2 class="section-title">Esto no es<br><em>solo video.</em></h2>
+  <div class="gold-divider"></div>
+
+  <p style="max-width:600px; color:#888880; line-height:1.8;">
+    Si estás aquí, es porque sabes que tu negocio puede verse mejor.
+    <br><br>
+    No necesitas más contenido… necesitas contenido con dirección.
+    <br><br>
+    Si quieres resultados reales, hablemos.
+  </p>
+
+  <a href="#contacto" class="hero-cta" onclick="fbq('track', 'InitiateCheckout');" style="margin-top:2rem; display:inline-block;">
+    Quiero resultados así →
+  </a>
+</section>
+
 
 <!-- CONTACTO -->
 <section class="reveal" id="contacto">
@@ -592,9 +1186,9 @@ section {
     <div class="gold-divider"></div>
     <p>¿Tienes una idea o quieres mejorar cómo comunicas tu negocio con video? Escríbeme. Cuéntame en qué estás y encontramos la mejor forma de ayudarte.</p>
     <div class="contact-links">
-      <a href="mailto:luiscifuentesfilms@gmail.com" class="contact-link">
+      <a href="/cdn-cgi/l/email-protection#2f435a465c4c46495a4a415b4a5c494643425c6f48424e4643014c4042" class="contact-link">
         <div class="contact-link-icon">@</div>
-        luiscifuentesfilms@gmail.com
+        <span class="__cf_email__" data-cfemail="3f534a564c5c56594a5a514b5a4c595653524c7f58525e5653115c5052">[email&#160;protected]</span>
       </a>
       <a href="https://www.instagram.com/luiscfilms?igsh=bHlsdGQ4MHJ5NWpz&utm_source=qr" class="contact-link" target="_blank" rel="noopener">
         <div class="contact-link-icon">IG</div>
@@ -604,15 +1198,15 @@ section {
         <div class="contact-link-icon">TK</div>
         @luiscfilms
       </a>
-      <a href="https://wa.me/message/ZWEMS7XF27A2N1" class="contact-link" target="_blank" rel="noopener">
+      <a href="https://wa.me/message/ZWEMS7XF27A2N1" class="contact-link" target="_blank" rel="noopener" onclick="fbq('track', 'Contact');">
         <div class="contact-link-icon">WA</div>
         WhatsApp directo
       </a>
     </div>
   </div>
 
-  <form class="contact-form" data-netlify="true" name="contacto" method="POST" action="/gracias.html">
-    <input type="hidden" name="form-name" value="contacto">
+  <form id="form-contacto" class="contact-form">
+    
     <div class="form-group">
       <label class="form-label" for="nombre">Tu nombre</label>
       <input type="text" id="nombre" name="nombre" class="form-input" placeholder="¿Con quién hablo?" required>
@@ -621,7 +1215,18 @@ section {
       <label class="form-label" for="cdato">Email o WhatsApp</label>
       <input type="text" id="cdato" name="contacto" class="form-input" placeholder="Para responderte" required>
     </div>
-    <div class="form-group">
+    
+<div class="form-group">
+  <label class="form-label">Presupuesto aproximado</label>
+  <select id="presupuesto" name="presupuesto" class="form-input">
+    <option value="">Selecciona un rango</option>
+    <option value="$100 - $300">$100 - $300</option>
+    <option value="$300 - $800">$300 - $800</option>
+    <option value="$800+">$800+</option>
+  </select>
+</div>
+
+<div class="form-group">
       <label class="form-label" for="mensaje">¿En qué puedo ayudarte?</label>
       <textarea id="mensaje" name="mensaje" class="form-textarea" rows="5" placeholder="Cuéntame sobre tu proyecto, tu negocio o lo que quieres lograr..." required></textarea>
     </div>
@@ -637,12 +1242,22 @@ section {
   <span class="footer-copy">© 2026 Luiscfilms · Filmmaker & Estrategia Visual</span>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// FORCE SCROLL TO TOP ON RELOAD — evita que el browser restaure posición media
+if (history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
+let lastScrollY = 0;
+  let menuOpen = false;
+
   document.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
     const logo = document.querySelector('.nav-logo img');
+    const currentY = window.scrollY;
 
-    if (window.scrollY > 60) {
+    if (currentY > 60) {
         nav.classList.add('scrolled');
         logo.style.transform = 'scale(0.9)';
         logo.style.opacity = '0.85';
@@ -652,41 +1267,129 @@ section {
         logo.style.opacity = '1';
     }
 
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    // hide nav on scroll down (mobile only), show on scroll up
+    if (window.innerWidth <= 768 && !menuOpen) {
+      if (currentY > lastScrollY && currentY > 80) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+    }
+
+    lastScrollY = currentY;
   });
 
-  function playVideo(thumb, url) {
-    const iframe = thumb.closest('.video-card').querySelector('iframe');
-    iframe.src = url;
-    thumb.classList.add('gone');
+  
+// ADVANCED TRACKING
+
+
+// TIME ON PAGE TRACKING (NIVEL AGENCIA)
+
+let timeTracked30 = false;
+let timeTracked60 = false;
+
+setTimeout(() => {
+  if (!timeTracked30 && typeof fbq !== 'undefined') {
+    fbq('trackCustom', 'TimeOnPage_30s');
+    timeTracked30 = true;
+  }
+}, 30000);
+
+setTimeout(() => {
+  if (!timeTracked60 && typeof fbq !== 'undefined') {
+    fbq('trackCustom', 'TimeOnPage_60s');
+    timeTracked60 = true;
+  }
+}, 60000);
+
+// HIGH INTENT USER
+
+let interactionCount = 0;
+
+document.addEventListener('click', () => {
+  interactionCount++;
+
+  if (interactionCount >= 3 && typeof fbq !== 'undefined') {
+    fbq('trackCustom', 'HighIntentUser');
+  }
+});
+
+// SCROLL DEPTH TRACKING PRO
+
+let scroll25 = false;
+let scroll50 = false;
+let scroll75 = false;
+
+window.addEventListener('scroll', () => {
+  let scrollPercent = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+
+  if (!scroll25 && scrollPercent > 0.25) {
+    fbq('trackCustom', 'Scroll_25');
+    scroll25 = true;
   }
 
-// REVEAL ON SCROLL
-const reveals = document.querySelectorAll('.reveal');
+  if (!scroll50 && scrollPercent > 0.5) {
+    fbq('trackCustom', 'Scroll_50');
+    scroll50 = true;
+  }
+
+  if (!scroll75 && scrollPercent > 0.75) {
+    fbq('trackCustom', 'Scroll_75');
+    scroll75 = true;
+  }
+});
+
+// Scroll tracking
+let scrollTracked = false;
 window.addEventListener('scroll', () => {
+  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.6) {
+    gtag('event', 'scroll_60');
+    scrollTracked = true;
+  }
+});
+
+// Video play tracking + mobile glow
+function playVideo(thumb, url) {
+  const card = thumb.closest('.video-card');
+  const iframe = card.querySelector('iframe');
+  iframe.src = url;
+  thumb.classList.add('gone');
+  // Glow on play
+  card.classList.add('lit');
+
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'ViewContent', {content_name: url});
+  }
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'video_play');
+  }
+}
+
+// Mobile touch glow: ilumina al tocar, apaga otros
+document.querySelectorAll('.video-card').forEach(card => {
+  card.addEventListener('touchstart', function() {
+    document.querySelectorAll('.video-card.lit').forEach(c => {
+      if (c !== card) c.classList.remove('lit');
+    });
+    card.classList.add('lit');
+  }, { passive: true });
+});
+
+// REVEAL ON SCROLL — unobserve para que no se revierta al hacer reload
+const reveals = document.querySelectorAll('.reveal');
+const revealOnScroll = () => {
   reveals.forEach(el => {
     const top = el.getBoundingClientRect().top;
-    if (top < window.innerHeight - 100) {
+    if (top < window.innerHeight - 60) {
       el.classList.add('active');
     }
   });
-});
+};
+window.addEventListener('scroll', revealOnScroll, { passive: true });
+// También disparar inmediatamente por si el reload llega a mitad de página
+revealOnScroll();
 
-// NAVBAR SHOW/HIDE
-let lastScroll = 0;
-const navbar = document.getElementById('navbar');
-
-window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    navbar.style.transform = 'translateY(-100%)';
-  } else {
-    navbar.style.transform = 'translateY(0)';
-  }
-
-  lastScroll = currentScroll;
-});
+// NAVBAR SHOW/HIDE — manejado arriba con nav-hidden class, este bloque duplicado eliminado
 
 
 // LOADER
@@ -704,12 +1407,8 @@ document.addEventListener('mousemove', e => {
 });
 
 
-// PARALLAX HERO
-window.addEventListener('scroll', () => {
-  const hero = document.getElementById('hero');
-  let offset = window.scrollY;
-  hero.style.backgroundPosition = 'center ' + (offset * 0.3) + 'px';
-});
+// PARALLAX HERO removido — sobreescribía backgroundPosition en cada scroll
+// causando que el layout de móvil se corrompiera después de scrollear
 
 // TILT EFFECT
 document.querySelectorAll('.video-card, .resultado-card').forEach(card => {
@@ -727,22 +1426,171 @@ document.querySelectorAll('.video-card, .resultado-card').forEach(card => {
 });
 
 
-// STORYTELLING SCENES
+// STORYTELLING SCENES — threshold reducido a 0.05 para que secciones grandes
+// no queden invisibles al hacer reload desde posición media
 const scenes = document.querySelectorAll('section');
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // dejar de observar una vez visible
     }
   });
-},{ threshold: 0.2 });
+},{ threshold: 0.05, rootMargin: '0px 0px 60px 0px' });
 
 scenes.forEach(sec => {
   sec.classList.add('scene');
   observer.observe(sec);
 });
 
+// Disparar revisión inmediata para secciones ya visibles al recargar
+setTimeout(() => {
+  document.querySelectorAll('section').forEach(sec => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      sec.classList.add('visible');
+    }
+  });
+  revealOnScroll();
+}, 50);
+
+
+// =============================================
+// APPLE MOTION — MOBILE SMOOTH 3D & SCROLL
+// Solo activo en móvil, sin afectar desktop
+// =============================================
+(function(){
+  var isMobile = window.innerWidth <= 900 || ('ontouchstart' in window);
+  if (!isMobile) return;
+
+  // --- 1. IntersectionObserver para entrada suave escalonada de cards ---
+  var cardSelectors = '.video-wrapper, .resultado-card, .service-card, .about-img-wrapper, .gold-divider, .section-label, .about-stats';
+  var mobileCards = document.querySelectorAll(cardSelectors);
+
+  var springObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        // Escalonar hijos del mismo padre
+        var siblings = Array.from(el.parentElement.children);
+        var idx = siblings.indexOf(el);
+        var delay = Math.min(idx * 60, 280);
+        el.style.transitionDelay = delay + 'ms';
+        el.classList.add('in-view');
+        springObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  mobileCards.forEach(function(el) { springObserver.observe(el); });
+
+  // Disparar inmediatamente para elementos ya visibles en reload desde posición media
+  setTimeout(function() {
+    mobileCards.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('in-view');
+        springObserver.unobserve(el);
+      }
+    });
+  }, 80);
+
+  // --- 2. Touch 3D Tilt suave en video-cards y resultado-cards ---
+  var tiltCards = document.querySelectorAll('.video-card, .resultado-card');
+  tiltCards.forEach(function(card) {
+    var tiltActive = false;
+    var resetTimer = null;
+
+    card.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      tiltActive = true;
+      var touch = e.touches[0];
+      var rect = card.getBoundingClientRect();
+      applyTilt(card, touch.clientX, touch.clientY, rect, 5);
+      clearTimeout(resetTimer);
+    }, { passive: true });
+
+    card.addEventListener('touchmove', function(e) {
+      if (!tiltActive || e.touches.length !== 1) return;
+      var touch = e.touches[0];
+      var rect = card.getBoundingClientRect();
+      applyTilt(card, touch.clientX, touch.clientY, rect, 5);
+    }, { passive: true });
+
+    card.addEventListener('touchend', function() {
+      tiltActive = false;
+      // Spring back suave
+      card.style.transition = 'transform 0.6s cubic-bezier(0.34,1.18,0.64,1), box-shadow 0.5s cubic-bezier(0.25,0.46,0.45,0.94)';
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      resetTimer = setTimeout(function() {
+        card.style.transition = '';
+      }, 650);
+    }, { passive: true });
+  });
+
+  function applyTilt(card, clientX, clientY, rect, maxDeg) {
+    var x = clientX - rect.left;
+    var y = clientY - rect.top;
+    var rotX = ((y / rect.height) - 0.5) * -maxDeg;
+    var rotY = ((x / rect.width) - 0.5) * maxDeg;
+    card.style.transition = 'transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)';
+    card.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.018)';
+  }
+
+  // --- 3. Giroscopio suave para efecto parallax en hero (si el dispositivo lo soporta) ---
+  var gyroEnabled = false;
+  var heroEl = document.getElementById('hero');
+
+  function enableGyro() {
+    if (gyroEnabled) return;
+    gyroEnabled = true;
+    window.addEventListener('deviceorientation', function(e) {
+      if (!e.beta && !e.gamma) return;
+      var tiltX = Math.max(-12, Math.min(12, e.gamma || 0)); // izq/der
+      var tiltY = Math.max(-8, Math.min(8, (e.beta || 0) - 45)); // arr/abj
+      // Parallax suave en hero bg
+      if (heroEl) {
+        var offsetX = 50 + tiltX * 0.4;
+        var offsetY = tiltY * 0.5;
+        heroEl.style.transition = 'background-position 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+        heroEl.style.backgroundPosition = offsetX + '% calc(top + ' + offsetY + 'px)';
+      }
+      // Leve inclinación en cards visibles
+      document.querySelectorAll('.video-card.lit').forEach(function(c) {
+        c.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+        c.style.transform = 'rotateX(' + (-tiltY * 0.4) + 'deg) rotateY(' + (tiltX * 0.4) + 'deg) scale(1.015)';
+      });
+    });
+  }
+
+  // Solicitar permiso en iOS 13+
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    document.addEventListener('touchstart', function onFirstTouch() {
+      DeviceOrientationEvent.requestPermission().then(function(state) {
+        if (state === 'granted') enableGyro();
+      }).catch(function(){});
+      document.removeEventListener('touchstart', onFirstTouch);
+    }, { once: true });
+  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+    enableGyro();
+  }
+
+  // --- 4. Scroll momentum visual: leve fade de secciones al entrar ---
+  // Ya manejado por el springObserver arriba, pero reforzamos .reveal en móvil
+  var mobileReveals = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = '0ms';
+        entry.target.classList.add('active');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  mobileReveals.forEach(function(el) { revealObserver.observe(el); });
+
+})();
 
 // COUNT-UP ANIMATION
 const counters = document.querySelectorAll('.counter');
@@ -789,6 +1637,270 @@ counters.forEach(counter => {
   counterObserver.observe(counter);
 });
 
+</script>
+
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1461629095416694');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1461629095416694&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<!-- BOTÓN WHATSAPP — APPLE MOTION EXPAND -->
+<style>
+  #wa-pill {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+  }
+
+  #wa-pill a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    background: #111111;
+    border: 0.5px solid rgba(201,168,76,0.35);
+    border-radius: 50px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.08);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    /* Solo el círculo visible por defecto */
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    transition:
+      width 0.55s cubic-bezier(0.34, 1.36, 0.64, 1),
+      padding 0.45s cubic-bezier(0.34, 1.36, 0.64, 1),
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  /* Hover en desktop */
+  #wa-pill:hover a,
+  #wa-pill a:focus {
+    width: 270px;
+    padding: 0 18px 0 10px;
+    border-color: rgba(201,168,76,0.6);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.65), 0 0 0 1px rgba(201,168,76,0.2);
+    outline: none;
+  }
+
+  #wa-pill .wa-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37,211,102,0.35);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  #wa-pill:hover .wa-icon,
+  #wa-pill a:focus .wa-icon {
+    transform: rotate(-8deg) scale(1.08);
+  }
+
+  #wa-pill .wa-label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.73rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: #F0EBE0;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(10px);
+    transition:
+      opacity 0.3s ease 0.15s,
+      transform 0.4s cubic-bezier(0.34, 1.36, 0.64, 1) 0.1s;
+    pointer-events: none;
+  }
+
+  #wa-pill:hover .wa-label,
+  #wa-pill a:focus .wa-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Pulso sutil en el ícono para llamar atención */
+  @keyframes wa-pulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(37,211,102,0.35); }
+    50%       { box-shadow: 0 2px 18px rgba(37,211,102,0.65); }
+  }
+  #wa-pill .wa-icon {
+    animation: wa-pulse 2.8s ease-in-out infinite;
+  }
+  #wa-pill:hover .wa-icon {
+    animation: none;
+  }
+</style>
+
+<div id="wa-pill">
+  <a href="https://wa.me/message/ZWEMS7XF27A2N1" target="_blank" aria-label="Chatea directamente conmigo por WhatsApp" onclick="fbq('track', 'Contact');">
+    <span class="wa-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" fill="white">
+        <path d="M16 2C8.268 2 2 8.268 2 16c0 2.52.686 4.878 1.88 6.9L2 30l7.344-1.848A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.6a11.56 11.56 0 01-5.888-1.604l-.424-.252-4.36 1.1 1.14-4.244-.276-.44A11.56 11.56 0 014.4 16C4.4 9.594 9.594 4.4 16 4.4S27.6 9.594 27.6 16 22.406 27.6 16 27.6zm6.34-8.68c-.348-.174-2.06-1.016-2.38-1.132-.32-.116-.552-.174-.784.174-.232.348-.9 1.132-1.104 1.364-.204.232-.406.26-.754.086-.348-.174-1.468-.54-2.796-1.724-1.034-.92-1.732-2.056-1.934-2.404-.204-.348-.022-.536.152-.708.158-.156.348-.406.522-.61.174-.204.232-.348.348-.58.116-.232.058-.436-.028-.61-.088-.174-.784-1.888-1.074-2.588-.284-.68-.572-.588-.784-.598l-.668-.012c-.232 0-.61.088-.928.436-.32.348-1.216 1.188-1.216 2.896s1.244 3.36 1.418 3.592c.174.232 2.448 3.736 5.932 5.24.83.358 1.476.572 1.982.732.832.264 1.59.226 2.188.138.668-.1 2.06-.842 2.35-1.656.29-.814.29-1.512.204-1.656-.086-.144-.318-.232-.666-.406z"/>
+      </svg>
+    </span>
+    <span class="wa-label">Chatea directamente conmigo</span>
+  </a>
+</div>
+
+<script>
+  // Tap en móvil: primer tap expande, segundo tap navega
+  (function(){
+    var pill = document.getElementById('wa-pill');
+    var link = pill.querySelector('a');
+    var expanded = false;
+
+    pill.addEventListener('touchstart', function(e){
+      if (!expanded) {
+        e.preventDefault();
+        expanded = true;
+        link.style.width = '270px';
+        link.style.padding = '0 18px 0 10px';
+        link.style.borderColor = 'rgba(201,168,76,0.6)';
+        link.querySelector('.wa-label').style.opacity = '1';
+        link.querySelector('.wa-label').style.transform = 'translateX(0)';
+        // Auto-colapsa si no se toca nada más
+        setTimeout(function(){ 
+          if(expanded){ collapse(); }
+        }, 4000);
+      }
+      // segundo tap: deja pasar al href normalmente
+    }, { passive: false });
+
+    document.addEventListener('touchstart', function(e){
+      if (expanded && !pill.contains(e.target)) { collapse(); }
+    });
+
+    function collapse(){
+      expanded = false;
+      link.style.width = '';
+      link.style.padding = '';
+      link.style.borderColor = '';
+      link.querySelector('.wa-label').style.opacity = '';
+      link.querySelector('.wa-label').style.transform = '';
+    }
+  })();
+</script>
+
+<!-- HAMBURGER JS -->
+<script>
+function toggleNav() {
+  var links = document.getElementById('navLinks');
+  var btn   = document.getElementById('navHamburger');
+  var nav   = document.getElementById('navbar');
+
+  if (links.classList.contains('open')) {
+    // Cierre con animación
+    links.classList.add('closing');
+    btn.classList.remove('open');
+    document.body.classList.remove('nav-open');
+    document.body.style.overflow = '';
+    menuOpen = false;
+    links.addEventListener('animationend', function onEnd() {
+      links.classList.remove('open');
+      links.classList.remove('closing');
+      links.removeEventListener('animationend', onEnd);
+    });
+  } else {
+    // Apertura
+    links.classList.add('open');
+    btn.classList.add('open');
+    document.body.style.overflow = '';
+    document.body.classList.add('nav-open');
+    menuOpen = true;
+    if (nav) nav.classList.remove('nav-hidden');
+  }
+}
+function closeNav() {
+  var links = document.getElementById('navLinks');
+  var btn   = document.getElementById('navHamburger');
+  if (!links.classList.contains('open')) return;
+  links.classList.add('closing');
+  btn.classList.remove('open');
+  document.body.classList.remove('nav-open');
+  document.body.style.overflow = '';
+  menuOpen = false;
+  links.addEventListener('animationend', function onEnd() {
+    links.classList.remove('open');
+    links.classList.remove('closing');
+    links.removeEventListener('animationend', onEnd);
+  });
+}
+</script>
+
+
+<script>
+
+</script>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5ixSHxtRKPH3E3qsRgX0HW2cwkgXNGws",
+  authDomain: "luiscfilms.firebaseapp.com",
+  projectId: "luiscfilms",
+  storageBucket: "luiscfilms.firebasestorage.app",
+  messagingSenderId: "891676479076",
+  appId: "1:891676479076:web:7f2f831d5ab4b39c53d971"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("form-contacto").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead');
+  }
+
+  const nombre = document.getElementById("nombre").value;
+  const contacto = document.getElementById("cdato").value;
+  const mensaje = document.getElementById("mensaje").value;
+        const presupuesto = document.getElementById("presupuesto").value;
+
+  try {
+    await addDoc(collection(db, "leads"), {
+      nombre,
+      contacto,
+      mensaje,
+      fecha: new Date()
+    });
+
+    window.location.href = "/gracias.html";
+
+  } catch (error) {
+    alert("Error al enviar");
+    console.error(error);
+  }
+});
 </script>
 
 </body>
