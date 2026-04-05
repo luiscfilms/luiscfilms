@@ -14,7 +14,9 @@
     --black: #0A0A0A; --dark: #111111; --surface: #1A1A1A;
     --text: #F0EBE0; --text-muted: #888880; --text-dim: #555550;
   }
-  html { scroll-behavior: smooth; }
+  /* scroll-behavior: smooth removido — causaba que al recargar la página
+     el browser restaurara la posición con animación, apareciendo a mitad de página */
+  html { scroll-behavior: auto; overflow-x: hidden; }
   body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; }
 
   /* NAV */
@@ -242,7 +244,7 @@ transition: all 0.4s ease;
   }
 
   /* SECTIONS */
-  section { padding: 8rem 4rem; }
+  section { padding: 8rem 4rem; max-width: 100%; position: relative; }
   .section-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
   .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; margin-bottom: 3rem; }
   .section-title em { font-style: italic; color: var(--gold); }
@@ -538,7 +540,7 @@ transition: all 0.4s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 8888;
   font-family: 'Cormorant Garamond', serif;
   font-size: 2rem;
   color: #C9A84C;
@@ -593,6 +595,145 @@ section {
   margin-bottom: 4rem;
 }
 
+/* =============================================
+   APPLE MOTION — MOBILE SMOOTH SCROLL & 3D
+   Solo afecta móvil, no cambia nada en desktop
+   ============================================= */
+
+/* Spring easing estilo Apple para reveal en mobile */
+@media (max-width: 900px) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+    transition:
+      opacity 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.75s cubic-bezier(0.34, 1.12, 0.64, 1);
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Scene sections: entrada suave con spring Apple */
+  .scene {
+    opacity: 0;
+    transform: translateY(40px) scale(0.985);
+    transition:
+      opacity 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.85s cubic-bezier(0.34, 1.08, 0.64, 1);
+  }
+  .scene.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Video cards: entrada escalonada suave al hacer scroll */
+  .video-wrapper,
+  .resultado-card,
+  .service-card {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    transition:
+      opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.65s cubic-bezier(0.34, 1.1, 0.64, 1),
+      box-shadow 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.4s ease;
+  }
+  .video-wrapper.in-view,
+  .resultado-card.in-view,
+  .service-card.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Touch glow en cards: suave como Apple */
+  .video-card.lit {
+    transform: scale(1.018) translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.3),
+      0 6px 24px rgba(0,0,0,0.65),
+      0 0 40px rgba(201,168,76,0.1);
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.18, 0.64, 1),
+      box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* About image: entrada desde abajo con spring */
+  .about-img-wrapper {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    transition:
+      opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s,
+      transform 0.7s cubic-bezier(0.34, 1.1, 0.64, 1) 0.1s;
+  }
+  .about-img-wrapper.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Stat numbers: entrada escalonada */
+  .about-stats > div {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.55s cubic-bezier(0.34, 1.15, 0.64, 1);
+  }
+  .about-stats.in-view > div:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.05s; }
+  .about-stats.in-view > div:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  .about-stats.in-view > div:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.19s; }
+
+  /* 3D Touch tilt suave en cards (reemplaza el mousemove de desktop) */
+  .video-card,
+  .resultado-card {
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.12, 0.64, 1),
+      box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.4s ease;
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+
+  /* Hero: parallax suave solo en mobile */
+  #hero {
+    transition: background-position 0.1s linear;
+  }
+
+  /* Gold divider: entrada animada */
+  .gold-divider {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s,
+      transform 0.6s cubic-bezier(0.34, 1.2, 0.64, 1) 0.2s;
+  }
+  .gold-divider.in-view {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  /* Section labels y titles: fade-slide suave */
+  .section-label {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.5s cubic-bezier(0.34, 1.1, 0.64, 1);
+  }
+  .section-label.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gyroscope parallax — solo en dispositivos con sensor */
+@media (max-width: 900px) {
+  .gyro-tilt {
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+}
 
 </style>
 </head>
@@ -1102,7 +1243,13 @@ section {
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  let lastScrollY = 0;
+// FORCE SCROLL TO TOP ON RELOAD — evita que el browser restaure posición media
+if (history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
+let lastScrollY = 0;
   let menuOpen = false;
 
   document.addEventListener('scroll', () => {
@@ -1228,32 +1375,21 @@ document.querySelectorAll('.video-card').forEach(card => {
   }, { passive: true });
 });
 
-// REVEAL ON SCROLL
+// REVEAL ON SCROLL — unobserve para que no se revierta al hacer reload
 const reveals = document.querySelectorAll('.reveal');
-window.addEventListener('scroll', () => {
+const revealOnScroll = () => {
   reveals.forEach(el => {
     const top = el.getBoundingClientRect().top;
-    if (top < window.innerHeight - 100) {
+    if (top < window.innerHeight - 60) {
       el.classList.add('active');
     }
   });
-});
+};
+window.addEventListener('scroll', revealOnScroll, { passive: true });
+// También disparar inmediatamente por si el reload llega a mitad de página
+revealOnScroll();
 
-// NAVBAR SHOW/HIDE
-let lastScroll = 0;
-const navbar = document.getElementById('navbar');
-
-window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    navbar.style.transform = 'translateY(-100%)';
-  } else {
-    navbar.style.transform = 'translateY(0)';
-  }
-
-  lastScroll = currentScroll;
-});
+// NAVBAR SHOW/HIDE — manejado arriba con nav-hidden class, este bloque duplicado eliminado
 
 
 // LOADER
@@ -1271,12 +1407,8 @@ document.addEventListener('mousemove', e => {
 });
 
 
-// PARALLAX HERO
-window.addEventListener('scroll', () => {
-  const hero = document.getElementById('hero');
-  let offset = window.scrollY;
-  hero.style.backgroundPosition = 'center ' + (offset * 0.3) + 'px';
-});
+// PARALLAX HERO removido — sobreescribía backgroundPosition en cada scroll
+// causando que el layout de móvil se corrompiera después de scrollear
 
 // TILT EFFECT
 document.querySelectorAll('.video-card, .resultado-card').forEach(card => {
@@ -1294,22 +1426,171 @@ document.querySelectorAll('.video-card, .resultado-card').forEach(card => {
 });
 
 
-// STORYTELLING SCENES
+// STORYTELLING SCENES — threshold reducido a 0.05 para que secciones grandes
+// no queden invisibles al hacer reload desde posición media
 const scenes = document.querySelectorAll('section');
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
       entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // dejar de observar una vez visible
     }
   });
-},{ threshold: 0.2 });
+},{ threshold: 0.05, rootMargin: '0px 0px 60px 0px' });
 
 scenes.forEach(sec => {
   sec.classList.add('scene');
   observer.observe(sec);
 });
 
+// Disparar revisión inmediata para secciones ya visibles al recargar
+setTimeout(() => {
+  document.querySelectorAll('section').forEach(sec => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      sec.classList.add('visible');
+    }
+  });
+  revealOnScroll();
+}, 50);
+
+
+// =============================================
+// APPLE MOTION — MOBILE SMOOTH 3D & SCROLL
+// Solo activo en móvil, sin afectar desktop
+// =============================================
+(function(){
+  var isMobile = window.innerWidth <= 900 || ('ontouchstart' in window);
+  if (!isMobile) return;
+
+  // --- 1. IntersectionObserver para entrada suave escalonada de cards ---
+  var cardSelectors = '.video-wrapper, .resultado-card, .service-card, .about-img-wrapper, .gold-divider, .section-label, .about-stats';
+  var mobileCards = document.querySelectorAll(cardSelectors);
+
+  var springObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        // Escalonar hijos del mismo padre
+        var siblings = Array.from(el.parentElement.children);
+        var idx = siblings.indexOf(el);
+        var delay = Math.min(idx * 60, 280);
+        el.style.transitionDelay = delay + 'ms';
+        el.classList.add('in-view');
+        springObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  mobileCards.forEach(function(el) { springObserver.observe(el); });
+
+  // Disparar inmediatamente para elementos ya visibles en reload desde posición media
+  setTimeout(function() {
+    mobileCards.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('in-view');
+        springObserver.unobserve(el);
+      }
+    });
+  }, 80);
+
+  // --- 2. Touch 3D Tilt suave en video-cards y resultado-cards ---
+  var tiltCards = document.querySelectorAll('.video-card, .resultado-card');
+  tiltCards.forEach(function(card) {
+    var tiltActive = false;
+    var resetTimer = null;
+
+    card.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) return;
+      tiltActive = true;
+      var touch = e.touches[0];
+      var rect = card.getBoundingClientRect();
+      applyTilt(card, touch.clientX, touch.clientY, rect, 5);
+      clearTimeout(resetTimer);
+    }, { passive: true });
+
+    card.addEventListener('touchmove', function(e) {
+      if (!tiltActive || e.touches.length !== 1) return;
+      var touch = e.touches[0];
+      var rect = card.getBoundingClientRect();
+      applyTilt(card, touch.clientX, touch.clientY, rect, 5);
+    }, { passive: true });
+
+    card.addEventListener('touchend', function() {
+      tiltActive = false;
+      // Spring back suave
+      card.style.transition = 'transform 0.6s cubic-bezier(0.34,1.18,0.64,1), box-shadow 0.5s cubic-bezier(0.25,0.46,0.45,0.94)';
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      resetTimer = setTimeout(function() {
+        card.style.transition = '';
+      }, 650);
+    }, { passive: true });
+  });
+
+  function applyTilt(card, clientX, clientY, rect, maxDeg) {
+    var x = clientX - rect.left;
+    var y = clientY - rect.top;
+    var rotX = ((y / rect.height) - 0.5) * -maxDeg;
+    var rotY = ((x / rect.width) - 0.5) * maxDeg;
+    card.style.transition = 'transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)';
+    card.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.018)';
+  }
+
+  // --- 3. Giroscopio suave para efecto parallax en hero (si el dispositivo lo soporta) ---
+  var gyroEnabled = false;
+  var heroEl = document.getElementById('hero');
+
+  function enableGyro() {
+    if (gyroEnabled) return;
+    gyroEnabled = true;
+    window.addEventListener('deviceorientation', function(e) {
+      if (!e.beta && !e.gamma) return;
+      var tiltX = Math.max(-12, Math.min(12, e.gamma || 0)); // izq/der
+      var tiltY = Math.max(-8, Math.min(8, (e.beta || 0) - 45)); // arr/abj
+      // Parallax suave en hero bg
+      if (heroEl) {
+        var offsetX = 50 + tiltX * 0.4;
+        var offsetY = tiltY * 0.5;
+        heroEl.style.transition = 'background-position 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+        heroEl.style.backgroundPosition = offsetX + '% calc(top + ' + offsetY + 'px)';
+      }
+      // Leve inclinación en cards visibles
+      document.querySelectorAll('.video-card.lit').forEach(function(c) {
+        c.style.transition = 'transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)';
+        c.style.transform = 'rotateX(' + (-tiltY * 0.4) + 'deg) rotateY(' + (tiltX * 0.4) + 'deg) scale(1.015)';
+      });
+    });
+  }
+
+  // Solicitar permiso en iOS 13+
+  if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+    document.addEventListener('touchstart', function onFirstTouch() {
+      DeviceOrientationEvent.requestPermission().then(function(state) {
+        if (state === 'granted') enableGyro();
+      }).catch(function(){});
+      document.removeEventListener('touchstart', onFirstTouch);
+    }, { once: true });
+  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+    enableGyro();
+  }
+
+  // --- 4. Scroll momentum visual: leve fade de secciones al entrar ---
+  // Ya manejado por el springObserver arriba, pero reforzamos .reveal en móvil
+  var mobileReveals = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = '0ms';
+        entry.target.classList.add('active');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  mobileReveals.forEach(function(el) { revealObserver.observe(el); });
+
+})();
 
 // COUNT-UP ANIMATION
 const counters = document.querySelectorAll('.counter');
