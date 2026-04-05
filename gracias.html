@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gracias | Luiscfilms</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 500px;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    p {
+      color: #aaa;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #d4af37;
+      border: 1px solid #d4af37;
+      padding: 14px 26px;
+      border-radius: 40px;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .back-btn:hover {
+      background: #d4af37;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    .icon {
+      font-size: 18px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Gracias 🙌</h1>
+    <p>Tu mensaje fue enviado correctamente.<br>Te responderé lo antes posible.</p>
+
+    <a href="index.html" class="back-btn">
+      <span class="icon">←</span>
+      Volver al inicio
+    </a>
+  </div>
+
+</body>
+</html>
