@@ -1064,8 +1064,8 @@ section {
     </div>
   </div>
 
-  <form id="form-contacto" class="contact-form" data-netlify="true" name="contacto" method="POST" action="/gracias.html">
-    <input type="hidden" name="form-name" value="contacto">
+  <form id="form-contacto" class="contact-form">
+    
     <div class="form-group">
       <label class="form-label" for="nombre">Tu nombre</label>
       <input type="text" id="nombre" name="nombre" class="form-input" placeholder="¿Con quién hablo?" required>
@@ -1576,6 +1576,47 @@ function closeNav() {
 document.getElementById("form-contacto").addEventListener("submit", function() {
   if (typeof fbq !== 'undefined') {
     fbq('track', 'Lead');
+  }
+});
+</script>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC5ixSHxtRKPH3E3qsRgX0HW2cwkgXNGws",
+  authDomain: "luiscfilms.firebaseapp.com",
+  projectId: "luiscfilms",
+  storageBucket: "luiscfilms.firebasestorage.app",
+  messagingSenderId: "891676479076",
+  appId: "1:891676479076:web:7f2f831d5ab4b39c53d971"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("form-contacto").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombre").value;
+  const contacto = document.getElementById("cdato").value;
+  const mensaje = document.getElementById("mensaje").value;
+
+  try {
+    await addDoc(collection(db, "leads"), {
+      nombre,
+      contacto,
+      mensaje,
+      fecha: new Date()
+    });
+
+    window.location.href = "/gracias.html";
+
+  } catch (error) {
+    alert("Error al enviar");
+    console.error(error);
   }
 });
 </script>
